@@ -24,8 +24,9 @@ def get_query_dict(
                 instructions=instructions,
                 input=question,
                 text_format=data_format,
+                prompt_cache_key="query_dict_instructions",
             )
-            data = response.output_parsed.dict()
+            data = response.output_parsed.model_dump()
             return data
         except Exception:  # pylint:disable=broad-except
             if i == retries - 1:
@@ -37,6 +38,7 @@ def get_topic(client, question):
         model="gpt-4.1-nano",
         instructions=INSTRUCTIONS_ABOUT_TOPICS,
         input=question,
+        prompt_cache_key="topic_instructions",
     )
     return response.output_text
 
@@ -66,7 +68,7 @@ def get_employees(question_data):
     else:
         employees = corp_data["employees"]
 
-    return employees
+    return {"country": country, "corporation": corporation, "employees": employees}
 
 
 def get_quarterlies(question_data):

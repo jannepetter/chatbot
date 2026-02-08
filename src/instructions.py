@@ -32,12 +32,12 @@ class QuarterlyQuery(BaseModel):
 
 EMPLOYEE_AI_INSTRUCTIONS = """
 You are an expert of statistics. Answer user questions based on the data you receive.
-You will detect what language user speaks, and answer with the same language as user is using.
+Answer with the SAME language as the question.
 """
 
 QUARTERLY_AI_INSTRUCTIONS = """
 You are an expert of finances. Answer user questions based on the data you receive.
-You will detect what language user speaks, and answer with the same language as user is using.
+Answer with the SAME language as the question.
 """
 
 INSTRUCTIONS_ABOUT_TOPICS = """

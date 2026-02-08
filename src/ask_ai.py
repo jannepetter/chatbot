@@ -13,6 +13,7 @@ from src.tools import get_query_dict, get_employees, get_quarterlies, get_topic
 
 load_dotenv()
 
+ENV = os.getenv("ENV")
 
 OPENAI_CLIENT = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY"),
@@ -44,7 +45,7 @@ def ask(question, topic=None):
     if not tool_items:
         print("I am sorry, I did not catch the topic of discussion")
         return
-    schema, tool_function, assistant_instructions, response_instructions = tool_items
+    schema, tool_function, assistant_instructions, response_format = tool_items
 
     question_data = get_query_dict(OPENAI_CLIENT, question, schema)
 
@@ -57,12 +58,16 @@ def ask(question, topic=None):
     ]
     content.append({"role": "user", "content": question})
 
+    # dont care intelligence on tests, but the response format
+    use_model = "gpt-4.1-nano" if ENV == "test" else "gpt-4.1-mini"
+
     response = OPENAI_CLIENT.responses.parse(
-        model="gpt-4.1",
+        model=use_model,
         instructions=assistant_instructions,
         input=content,
-        text_format=response_instructions,
+        text_format=response_format,
+        prompt_cache_key="assistant_instructions",
     )
-    ai_reply = response.output_parsed.dict()
+    ai_reply = response.output_parsed.model_dump()
 
-    print(ai_reply)
+    return ai_reply
